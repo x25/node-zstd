@@ -1,4 +1,4 @@
-Binny [![](https://travis-ci.org/x25/node-zstd.svg?branch=master)](https://travis-ci.org/x25/node-zstd)
+node-zstd [![](https://travis-ci.org/x25/node-zstd.svg?branch=master)](https://travis-ci.org/x25/node-zstd)
 =====
 
 ZSTD lossless compression algorithm bindings for node.js.
