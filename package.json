@@ -4,7 +4,7 @@
   "description": "ZSTD lossless compression algorithm bindings for node.js",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/zstd.js",
+    "test": "node tests/zstd.js"
   },
   "repository": {
     "type": "git",
