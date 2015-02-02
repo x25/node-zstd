@@ -3,7 +3,7 @@ var zstd = require('./..');
 
 for (var i=0;i<100;i++) {
 
-  var bsize = 1024*1024*10;
+  var bsize = 1024*1024;
   var data = new Buffer(bsize);
   data.fill('A');
 
@@ -12,3 +12,4 @@ for (var i=0;i<100;i++) {
 
   assert(decompressed.length == bsize);
 }
+

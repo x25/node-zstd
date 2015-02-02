@@ -13,33 +13,34 @@ NAN_METHOD(Decompress) {
     return NanThrowError("First argument needs to be a buffer");
   }
 
-  size_t srcSize = node::Buffer::Length(args[0]);
-  size_t decompressedMaxSize = srcSize*10000;// ^^
+  Local<Object> inputBuffer = args[0]->ToObject();
 
-  char *srcBuffer = node::Buffer::Data(args[0]);
+  size_t srcSize = node::Buffer::Length(inputBuffer);
+  size_t decompressedMaxSize = srcSize*8000;// ^^
 
-  void* decompressedBuffer = malloc(decompressedMaxSize);
+  char *srcData = node::Buffer::Data(inputBuffer);
+  char *decompressedBuffer;
 
-  if (!decompressedBuffer) {
+  try {
+
+    decompressedBuffer = new char[decompressedMaxSize];
+
+  } catch (const std::bad_alloc&) {
 
     return NanThrowError("Not enough memory!");
   }
 
-  size_t decompressedSize = ZSTD_decompress(decompressedBuffer, decompressedMaxSize, srcBuffer, srcSize);
+  size_t decompressedSize = ZSTD_decompress(decompressedBuffer, decompressedMaxSize, srcData, srcSize);
 
   if (ZSTD_isError(decompressedSize)) {
 
-    free(decompressedBuffer);
+    delete[] decompressedBuffer;
     return NanThrowError(ZSTD_getErrorName(decompressedSize));
   }
 
-  Local<Object> result = NanNewBufferHandle(decompressedSize); //slowBuffer in node <=0.10!
+  Local<Object> result = NanNewBufferHandle(decompressedBuffer, decompressedSize);
 
-  char *outputData = node::Buffer::Data(result);
-
-  memcpy(outputData, decompressedBuffer, decompressedSize);
-
-  free(decompressedBuffer);
+  delete[] decompressedBuffer;
 
   NanReturnValue(result);
 }
@@ -52,27 +53,29 @@ NAN_METHOD(Compress) {
     return NanThrowError("First argument needs to be a buffer");
   }
 
-  size_t srcSize = node::Buffer::Length(args[0]);
+  Local<Object> inputBuffer = args[0]->ToObject();
 
-  char *srcBuffer = node::Buffer::Data(args[0]);
+  size_t srcSize = node::Buffer::Length(inputBuffer);
+
+  char *srcData = node::Buffer::Data(inputBuffer);
 
   size_t maxCompressedSize = ZSTD_compressBound(srcSize);
-  void* compressedBuffer = malloc(maxCompressedSize);
 
-  if (!compressedBuffer) {
+  char* compressedBuffer;
+
+  try {
+
+    compressedBuffer = new char[maxCompressedSize];
+
+  } catch (const std::bad_alloc&) {
 
     return NanThrowError("Not enough memory!");
   }
 
-  size_t compressedSize = ZSTD_compress(compressedBuffer, maxCompressedSize, srcBuffer, srcSize);
+  size_t compressedSize = ZSTD_compress(compressedBuffer, maxCompressedSize, srcData, srcSize);
 
-  Local<Object> result = NanNewBufferHandle(compressedSize); //slowBuffer in node <=0.10!
-
-  char *outputData = node::Buffer::Data(result);
-
-  memcpy(outputData, compressedBuffer, compressedSize);
-
-  free(compressedBuffer);
+  Local<Object> result = NanNewBufferHandle(compressedBuffer, compressedSize);
+  delete[] compressedBuffer;
 
   NanReturnValue(result);
 }

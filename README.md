@@ -3,6 +3,8 @@ node-zstd [![](https://travis-ci.org/x25/node-zstd.svg?branch=master)](https://t
 
 ZSTD lossless compression algorithm bindings for Node.js.
 
+## Installation
+
 ```bash
 $ npm install zstd
 ```
