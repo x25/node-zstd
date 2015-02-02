@@ -1,6 +1,6 @@
 {
   "name": "zstd",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ZSTD lossless compression algorithm bindings for node.js",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,8 @@
   },
   "keywords": [
     "zstd",
-    "compression"
+    "compression",
+    "decompression"
   ],
   "dependencies": {
     "nan": "*"

@@ -22,7 +22,6 @@ NAN_METHOD(Decompress) {
 
   if (!decompressedBuffer) {
 
-    free(decompressedBuffer);
     return NanThrowError("Not enough memory!");
   }
 
@@ -62,7 +61,6 @@ NAN_METHOD(Compress) {
 
   if (!compressedBuffer) {
 
-    free(compressedBuffer);
     return NanThrowError("Not enough memory!");
   }
 

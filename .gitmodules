@@ -1,0 +1,3 @@
+[submodule "deps/zstd"]
+	path = deps/zstd
+	url = git://github.com/Cyan4973/zstd.git
