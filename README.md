@@ -9,6 +9,14 @@ ZSTD lossless compression algorithm bindings for Node.js.
 $ npm install zstd
 ```
 
+In case of npm install error:
+
+```
+gyp: Call to 'node -e "require('nan')"' returned exit status 127. while trying to load binding.gyp
+```
+
+Try to `sudo apt-get install nodejs-legacy` or `sudo ln -s "$(which nodejs)" /usr/bin/node`.
+
 ## Usage
 
 ```js

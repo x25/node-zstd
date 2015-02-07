@@ -1,15 +1,24 @@
 var assert = require('assert');
 var zstd = require('./..');
 
-for (var i=0;i<100;i++) {
+function isSame(a, b) {
+	if (a.length !== b.length) return false;
+	for (var i = 0; i < a.length; i++) {
+		if (a[i] !== b[i]) return false;
+	}
+	return true;
+};
 
-  var bsize = 1024*1024;
-  var data = new Buffer(bsize);
-  data.fill('A');
+for (var i = 0; i<100; i++) {
 
-  var compressed = zstd.compress(data);
-  var decompressed = zstd.decompress(compressed);
+	var bsize = 1024*1024;
+	var data = new Buffer(bsize);
+	data.fill('A');
 
-  assert(decompressed.length == bsize);
+	var compressed = zstd.compress(data);
+
+	var decompressed = zstd.decompress(compressed);
+
+	assert(isSame(decompressed, data));
 }
 
