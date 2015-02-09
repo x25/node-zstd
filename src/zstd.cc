@@ -7,7 +7,7 @@
 
 using namespace v8;
 
-#define ZSTDJS_BLOCK_SIZE 128 * (1U<<10) //128 KB;
+#define ZSTDJS_BLOCK_SIZE 128 * (1U<<10) //128 KB
 
 NAN_METHOD(Decompress) {
   NanScope();
@@ -28,6 +28,7 @@ NAN_METHOD(Decompress) {
 
   if (srcData + headerSize > srcDataEnd) {
 
+      ZSTD_freeDCtx(ctx);
       return NanThrowError("Error: invalid header");
   }
 
@@ -38,6 +39,7 @@ NAN_METHOD(Decompress) {
 
   if (ZSTD_isError(sizeCheck)) {
 
+    ZSTD_freeDCtx(ctx);
     return NanThrowError("Error decoding header");
   }
 
@@ -51,6 +53,7 @@ NAN_METHOD(Decompress) {
   {
     if (srcData + toRead > srcDataEnd) {
 
+      ZSTD_freeDCtx(ctx);
       std::free(outBuff);
       return NanThrowError("Invalid block data");
     }
@@ -59,6 +62,7 @@ NAN_METHOD(Decompress) {
 
     if (!r) {
 
+       ZSTD_freeDCtx(ctx);
        std::free(outBuff);
        return NanThrowError("Allocation error : not enough memory");
     }
@@ -71,6 +75,7 @@ NAN_METHOD(Decompress) {
 
     if (ZSTD_isError(decodedSize)) {
 
+      ZSTD_freeDCtx(ctx);
       std::free(outBuff);
       return NanThrowError("Error decoding block");
     }
@@ -83,8 +88,8 @@ NAN_METHOD(Decompress) {
 
   Local<Object> result = NanNewBufferHandle(outBuff, outSize);
 
-  std::free(outBuff);
   ZSTD_freeDCtx(ctx);
+  std::free(outBuff);
 
   NanReturnValue(result);
 }
